@@ -1,0 +1,76 @@
+# General
+seed: 42
+exp_name: vlm_explore_mt
+dataset: MT-HM3D
+output_parent_dir: results
+question_data_path: data/MT-HM3D-filtered-new-subset.csv
+init_pose_data_path: data/scene_init_poses_all.csv
+scene_data_path: [/path/to/scene_datasets/HM3D-formatted/train, /path/to/scene_datasets/HM3D-formatted/val]
+save_obs: true
+save_freq: 10
+start_idx: 0
+end_idx: 200
+
+# Question answering
+vlm:
+  hf_token: ${oc.env:HF_TOKEN,""}
+  device: cuda:1
+  model_id: prism-dinosiglip+7b
+  model_name: prismatic
+
+prompts:
+  room: "Look at the objects in the room. What room are you most likely to be in at the moment? Choose ONLY ONE from the list: [dining room, living room, kitchen, bedroom, bathroom, storage room, gym, home office, laundry room, garage, porch]"
+  confidence: "\nConsider the question: '{}'. Here is the most relevant images you have seen so far. Do you have enough information to answer the question? Answer with Yes or No."
+  gpt_question: "You are an agent exploring an environment to answer the question: \n{}. \nHere are the most relevant images you've seen.
+        Based on what you see in the images, what choice would you choose? For comparison questions, ALWAYS compare the first object to EACH of the other objects. If you do not observe anything, make a guess instead of answering you dont know. Think step by step. Give the final answer as ANSWER: followed by the letter"
+  gpt_stop: "You are an agent exploring an environment to answer the question: \n{}. \nHere are the most relevant images you've seen so far.
+        Based on the images, do you have enough information to answer the question? If the question asks to count how many, keep exploring until you check multiple DIFFERENT views. Think step by step and then give a final choice for exploration with ANSWER: followed by a single letter for A. Keep Exploring or B. Stop"
+
+# Camera, image
+camera_height: 1.5
+camera_tilt_deg: -30
+img_width: 640
+img_height: 480
+hfov: 120
+tsdf_grid_size: 0.1
+margin_w_ratio: 0.25
+margin_h_ratio: 0.6
+
+# Relevancy retrieval
+clip_sim_w: 0.6
+max_det_rooms: 4
+top_k: 3
+
+# Exploration
+init_spin_steps: 2
+init_clearance: 0.5
+max_step_room_size_ratio: 3
+depth_thresh: 0.35
+min_depth_ratio: 0.7
+black_pixel_ratio: 0.6
+turn_angle: 90
+partial_step_ratio: 0.6
+min_random_init_steps: 2
+use_find_normal: false
+default_exp: false
+exp_type: door-frontiers
+feat_adaptor: siglip
+
+# TSDF Planner
+planner:
+  dist_T: 10
+  unexplored_T: 0.2
+  unoccupied_T: 2.0
+  val_T: 0.5
+  val_dir_T: 0.5
+  max_val_check_frontier: 3
+  smooth_sigma: 5
+  eps: 1
+  min_dist_from_cur: 0.5
+  max_dist_from_cur: 3
+  frontier_spacing: 1.5
+  frontier_min_neighbors: 3
+  frontier_max_neighbors: 4
+  max_unexplored_check_frontier: 3
+  max_unoccupied_check_frontier: 1
+  unexp_w: 1

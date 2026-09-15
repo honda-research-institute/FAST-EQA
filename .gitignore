@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.egg
+build/
+dist/
+.eggs/
+
+# Environments
+.env
+.venv/
+venv/
+env/
+
+# Experiment outputs
+results/
+outputs/
+logs/
+wandb/
+*.log
+
+# Datasets / checkpoints
+scene_datasets/
+hm3dsem/
+*.glb
+*.navmesh
+*.pth
+*.ckpt
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+*.swp
+
+# Notebooks
+.ipynb_checkpoints/
